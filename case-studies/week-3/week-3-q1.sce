@@ -20,6 +20,24 @@ function epsilon = Analytical(t)
       cos(omega * t));
 endfunction
 
+function slope = dedt(t, epsilon)
+  slope = (-E * epsilon + Stress(t)) / eta;
+endfunction
+
+function y = ForwardEuler(t, y_prev, h)
+  y = y_prev + h * dedt(t, y_prev);
+endfunction
+
+function y = HeunsMethod(t, y_prev, h)
+  y = y_prev + h / 2 * (dedt(t, y_prev) + dedt(t + h, y_prev +...
+      h * dedt(t, y_prev)));
+endfunction
+
+function y = MidpointMethod(t, y_prev, h)
+  y = y_prev + h * dedt(t + h / 2, y_prev + h / 2 *...
+      dedt(t, y_prev));
+endfunction
+
 // Time domains for 3 different values of dt
 time1 = [0:dt1:100];
 time2 = [0:dt2:100];
@@ -37,45 +55,20 @@ mm_1 = zeros(time1);
 mm_2 = zeros(time2);
 mm_3 = zeros(time3);
 for t1 = 1:length(time1) - 1
-  fe_1(t1 + 1) = fe_1(t1) + dt1 / eta * (-E * fe_1(t1) +...
-      Stress(time1(t1)));
-
-  // Heun's method uses Forward Euler as the intermediate value
-  hm_1(t1 + 1) = hm_1(t1) + dt1 / 2 / eta * (-E * hm_1(t1) +...
-      Stress(time1(t1)) + -E * fe_1(t1 + 1) +...
-      Stress(time1(t1 + 1)));
-
-  mm_intermediate = mm_1(t1) + dt1 / 2 / eta * (-E * mm_1(t1) +...
-      Stress(time1(t1)));
-  mm_1(t1 + 1) = mm_1(t1) + dt1 / eta * (-E * mm_intermediate +...
-      Stress(time1(t1) + dt1 / 2));
+  fe_1(t1 + 1) = ForwardEuler(time1(t1), fe_1(t1), dt1);
+  hm_1(t1 + 1) = HeunsMethod(time1(t1), hm_1(t1), dt1);
+  mm_1(t1 + 1) = MidpointMethod(time1(t1), mm_1(t1), dt1);
   if (~modulo(t1, 10))
     t2 = t1 / 10;
-    fe_2(t2 + 1) = fe_2(t2) + dt2 / eta * (-E * fe_2(t2) +...
-        Stress(time2(t2)));
-
-    hm_2(t2 + 1) = hm_2(t2) + dt2 / 2 / eta * (-E * hm_2(t2) +...
-    Stress(time2(t2)) + -E * fe_2(t2 + 1) +...
-    Stress(time2(t2 + 1)));
-
-    mm_intermediate = mm_2(t2) + dt2 / 2 / eta * (-E * mm_2(t2) +...
-        Stress(time2(t2)));
-    mm_2(t2 + 1) = mm_2(t2) + dt2 / eta * (-E * mm_intermediate +...
-        Stress(time2(t2) + dt2 / 2));
+    fe_2(t2 + 1) = ForwardEuler(time2(t2), fe_2(t2), dt2);
+    hm_2(t2 + 1) = HeunsMethod(time2(t2), hm_2(t2), dt2);
+    mm_2(t2 + 1) = MidpointMethod(time2(t2), mm_2(t2), dt2);
   end
   if (~modulo(t1, 100))
     t3 = t1 / 100;
-    fe_3(t3 + 1) = fe_3(t3) + dt3 / eta * (-E * fe_3(t3) +...
-        Stress(time3(t3)));
-
-    hm_3(t3 + 1) = hm_3(t3) + dt3 / 2 / eta * (-E * hm_3(t3) +...
-    Stress(time3(t3)) + -E * fe_3(t3 + 1) +...
-    Stress(time3(t3 + 1)));
-
-    mm_intermediate = mm_3(t3) + dt3 / 2 / eta * (-E * mm_3(t3) +...
-        Stress(time3(t3)));
-    mm_3(t3 + 1) = mm_3(t3) + dt3 / eta * (-E * mm_intermediate +...
-        Stress(time3(t3) + dt3 / 2));
+    fe_3(t3 + 1) = ForwardEuler(time3(t3), fe_3(t3), dt3);
+    hm_3(t3 + 1) = HeunsMethod(time3(t3), hm_3(t3), dt3);
+    mm_3(t3 + 1) = MidpointMethod(time3(t3), mm_3(t3), dt3);
   end
 end
 
@@ -97,3 +90,47 @@ legend(["Analytical"; "FE, dt = 0.01"; "FE, dt = 0.1";...
     "FE, dt = 1"; "HM, dt = 0.01"; "HM, dt = 0.1";...
     "HM, dt = 1"; "MM, dt = 0.01"; "MM, dt = 0.1";...
     "MM, dt = 1"]);
+
+// Old implementation
+//for t1 = 1:length(time1) - 1
+//  fe_1(t1 + 1) = fe_1(t1) + dt1 / eta * (-E * fe_1(t1) +...
+//      Stress(time1(t1)));
+//
+//  // Heun's method uses Forward Euler as the intermediate value
+//  hm_1(t1 + 1) = hm_1(t1) + dt1 / 2 / eta * (-E * hm_1(t1) +...
+//      Stress(time1(t1)) + -E * fe_1(t1 + 1) +...
+//      Stress(time1(t1 + 1)));
+//
+//  mm_intermediate = mm_1(t1) + dt1 / 2 / eta * (-E * mm_1(t1) +...
+//      Stress(time1(t1)));
+//  mm_1(t1 + 1) = mm_1(t1) + dt1 / eta * (-E * mm_intermediate +...
+//      Stress(time1(t1) + dt1 / 2));
+//  if (~modulo(t1, 10))
+//    t2 = t1 / 10;
+//    fe_2(t2 + 1) = fe_2(t2) + dt2 / eta * (-E * fe_2(t2) +...
+//        Stress(time2(t2)));
+//
+//    hm_2(t2 + 1) = hm_2(t2) + dt2 / 2 / eta * (-E * hm_2(t2) +...
+//    Stress(time2(t2)) + -E * fe_2(t2 + 1) +...
+//    Stress(time2(t2 + 1)));
+//
+//    mm_intermediate = mm_2(t2) + dt2 / 2 / eta * (-E * mm_2(t2) +...
+//        Stress(time2(t2)));
+//    mm_2(t2 + 1) = mm_2(t2) + dt2 / eta * (-E * mm_intermediate +...
+//        Stress(time2(t2) + dt2 / 2));
+//  end
+//  if (~modulo(t1, 100))
+//    t3 = t1 / 100;
+//    fe_3(t3 + 1) = fe_3(t3) + dt3 / eta * (-E * fe_3(t3) +...
+//        Stress(time3(t3)));
+//
+//    hm_3(t3 + 1) = hm_3(t3) + dt3 / 2 / eta * (-E * hm_3(t3) +...
+//    Stress(time3(t3)) + -E * fe_3(t3 + 1) +...
+//    Stress(time3(t3 + 1)));
+//
+//    mm_intermediate = mm_3(t3) + dt3 / 2 / eta * (-E * mm_3(t3) +...
+//        Stress(time3(t3)));
+//    mm_3(t3 + 1) = mm_3(t3) + dt3 / eta * (-E * mm_intermediate +...
+//        Stress(time3(t3) + dt3 / 2));
+//  end
+//end
