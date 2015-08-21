@@ -1,5 +1,8 @@
 clear;
 clf;
+// read from file
+filename = pwd() + "\case-studies\week-3\exp_data.txt";
+data = fscanfMat(filename);
 // constant variables
 frequency = 0.1;  // Hz
 omega = 2 * %pi * frequency;
@@ -90,9 +93,6 @@ for t = 1:length(time) - 1
   mm_nc(t + 1) = MidpointMethod_nc(time(t), mm_nc(t), dt);
   rk_nc(t + 1) = RK4_nc(time(t), rk_nc(t), dt);
 end
-
-filename = pwd() + "\week-3\exp_data.txt";
-data = fscanfMat(filename);
 
 plot(data(:,1), data(:,2), 'k.');
 //plot(fe, Stress(time));
