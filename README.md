@@ -18,4 +18,6 @@ Contains Scilab codes for BN5205 Computational Biomechanics
     * Forward Euler
     * Heun's Method
     * Midpoint Method
-  2. asdf
+  2. Stability of implicit method vs explicit method
+    * Backward Euler
+    * Midpoint Method
