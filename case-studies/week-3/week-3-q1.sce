@@ -29,8 +29,9 @@ function y = ForwardEuler(t, y_prev, h)
 endfunction
 
 function y = HeunsMethod(t, y_prev, h)
-  y = y_prev + h / 2 * (dedt(t, y_prev) + dedt(t + h, y_prev +...
-      h * dedt(t, y_prev)));
+  intermediate = dedt(t, y_prev);
+  y = y_prev + h / 2 * (intermediate + dedt(t + h, y_prev + h *...
+      intermediate));
 endfunction
 
 function y = MidpointMethod(t, y_prev, h)

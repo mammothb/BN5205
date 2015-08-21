@@ -14,5 +14,8 @@ Contains Scilab codes for BN5205 Computational Biomechanics
     * 4<sup>th</sup> order Runge-Kutta method
   2. Comparison between numerical methods and experimental data of the hysteresis loop
 * Week 4: Smooth Muscle Contraction (Multiple ODEs, Explicit & Implicit)
-  1. asdf
+  1. Solving Hai & Murphy model using various numerical methods
+    * Forward Euler
+    * Heun's Method
+    * Midpoint Method
   2. asdf
