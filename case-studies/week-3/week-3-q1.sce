@@ -6,7 +6,7 @@ omega = 2 * %pi * frequency;
 sigma_0 = 6;  // MPa
 E = 3;  // elastic modulus (MPa)
 eta = 5;  // viscosity (MPa/s)
-dt1 = 0.01;
+dt1 = 0.01; // s
 dt2 = dt1 * 10;
 dt3 = dt1 * 100;
 
