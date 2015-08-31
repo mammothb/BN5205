@@ -1,9 +1,9 @@
 clear;
 clf;
 // constant variables
-dt1 = 0.01;
-dt2 = dt1 * 10;
-dt3 = dt1 * 100;
+dt1 = 0.02;  // seconds
+dt2 = dt1 * 10;  // seconds
+dt3 = dt1 * 100;  // seconds
 
 function dMsdt = slopes(t, Ms)
   if t <= 5
@@ -45,16 +45,16 @@ Ms_mm3 = zeros(4, length(time3));
 Ms_mm1 = zeros(4, length(time1));
 Ms_mm2 = zeros(4, length(time2));
 Ms_hm3 = zeros(4, length(time3));
-// At t = 0, M = 1
-Ms_fe1(1, 1) = 1;
-Ms_fe2(1, 1) = 1;
-Ms_fe3(1, 1) = 1;
-Ms_hm1(1, 1) = 1;
-Ms_hm2(1, 1) = 1;
-Ms_hm3(1, 1) = 1;
-Ms_mm1(1, 1) = 1;
-Ms_mm2(1, 1) = 1;
-Ms_mm3(1, 1) = 1;
+// At t = 0, M = 1, AM = 0, AM_p = 0, M_p = 0
+Ms_fe1(:, 1) = [1; 0; 0; 0];
+Ms_fe2(:, 1) = [1; 0; 0; 0];
+Ms_fe3(:, 1) = [1; 0; 0; 0];
+Ms_hm1(:, 1) = [1; 0; 0; 0];
+Ms_hm2(:, 1) = [1; 0; 0; 0];
+Ms_hm3(:, 1) = [1; 0; 0; 0];
+Ms_mm1(:, 1) = [1; 0; 0; 0];
+Ms_mm2(:, 1) = [1; 0; 0; 0];
+Ms_mm3(:, 1) = [1; 0; 0; 0];
 
 for t1 = 1:length(time1) - 1
   Ms_fe1(:, t1 + 1) = ForwardEuler(time1(t1), Ms_fe1(:, t1), dt1);

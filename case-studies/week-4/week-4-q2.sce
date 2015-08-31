@@ -2,7 +2,7 @@ clear;
 clf;
 
 // constant variables
-dt = 0.1;
+dt = 0.0774;
 
 function dMsdt = slopes(t, Ms)
   if t <= 5
@@ -43,7 +43,7 @@ for t = 1:length(time) - 1
 end  // t
 
 plot(time, Ms(2, :) + Ms(3, :));
-//plot(time, Ms_mm(2, :) + Ms_mm(3, :), 'r');
+plot(time, Ms_mm(2, :) + Ms_mm(3, :), 'r');
 title("Stress vs time (with muscle relaxant)");
 xlabel("$Time\ t$", "fontsize", 3);
 ylabel("$Stress\ (AM+AM_p)$", "fontsize", 3);
