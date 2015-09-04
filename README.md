@@ -21,3 +21,7 @@ Contains Scilab codes for BN5205 Computational Biomechanics
   2. Stability of implicit method vs explicit method
     * Backward Euler
     * Midpoint Method
+* Week 5: 3-point Bending on Tibia (2<sup>nd</sup> order ODE: IVP and BVP)
+  1. Solving Euler-Bernoulli beam theory equation (BVP) using two methods
+    * Shooting method
+    * Equilibrium method
