@@ -25,3 +25,4 @@ Contains Scilab codes for BN5205 Computational Biomechanics
   1. Solving Euler-Bernoulli beam theory equation (BVP) using two methods
     * Shooting method
     * Equilibrium method
+  2. Verifying numerical result against analytical result
