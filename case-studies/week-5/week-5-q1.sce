@@ -27,22 +27,29 @@ endfunction
 // indicate first run of loop so we don't try to guess for a new
 // beta
 first_time = %T;
+first_time_hm = %T;
 counter = 1;  // toggle to alternate between beta1 and beta2
+counter_hm = 1;  // toggle to alternate between beta1 and beta2
 tol = 1e-6;  // tolerance value
 
 // auxiliary variables, y1 = y, y2 = y' = y1'
 y1_s = zeros(len);
 y2_s = zeros(len);
+y1_hm = zeros(len);
+y2_hm = zeros(len);
 
 // boundary value for y(L) = 0;
 bv = 0;
 // set boundary condition to be false so while loop can start
 y1_s($) = bv + 2 * tol;
+y1_hm($) = bv + 2 * tol;
 // intial guesses for y2
 // [beta1, B1;
 //  beta2, B2]
 shoot = [0, 0;
          1, 0];
+shoot_hm = [0, 0;
+            1, 0];
 // shooting method (secant)
 while abs(y1_s($) - bv) > tol
   index = 2 - modulo(counter, 2);
@@ -65,6 +72,33 @@ while abs(y1_s($) - bv) > tol
   first_time = %F;
   // alternating between beta1 and beta2
   counter = modulo(counter + 1, 2);
+end
+
+while abs(y1_hm($) - bv) > tol
+  index_hm = 2 - modulo(counter_hm, 2);
+  // initial condition for y(0) = 0
+  y1_hm(1) = 0;
+  y2_hm(1) = shoot_hm(index_hm, 1);
+  for x = 1:length(len) - 1;
+    // Heun's method
+    y1_intermediate = y2_hm(x);
+    y2_intermediate = rhs(len(x), a) - alpha * y1_hm(x);
+    y2_hm(x + 1) = y2_hm(x) + dx / 2 * (y2_intermediate + rhs(len(x + 1),...
+        a) - alpha * (y1_hm(x) + dx * y1_intermediate));
+    y1_hm(x + 1) = y1_hm(x) + dx / 2 * (y1_intermediate + y2_hm(x) + dx *...
+        y2_intermediate);
+  end  // x
+  shoot_hm(index_hm, 2) = y1_hm($);
+  // Determing new beta from the previous two guesses
+  if (~first_time_hm)
+    slope = (shoot_hm(1, 2) - shoot_hm(2, 2)) / (shoot_hm(1, 1) -...
+        shoot_hm(2, 1));
+    shoot_hm(1 + modulo(index_hm, 2), 1) = shoot_hm(index_hm,...
+        1) + (bv - shoot_hm(index_hm, 2)) / slope;
+  end
+  first_time_hm = %F;
+  // alternating between beta1 and beta2
+  counter_hm = modulo(counter_hm + 1, 2);
 end
 
 // equilibrium method
@@ -97,4 +131,5 @@ end
 y_e = A \ B;
 
 plot(len, y1_s);
+plot(len, y1_hm, 'g-');
 plot(len_e', y_e, 'r-');
