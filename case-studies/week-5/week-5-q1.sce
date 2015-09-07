@@ -64,8 +64,7 @@ while abs(y1_s($) - bv) > tol
   shoot(index, 2) = y1_s($);
   // Determing new beta from the previous two guesses
   if (~first_time)
-    slope = (shoot(1, 2) - shoot(2, 2)) / (shoot(1, 1) -...
-        shoot(2, 1));
+    slope = (shoot(1, 2) - shoot(2, 2)) / (shoot(1, 1) - shoot(2, 1));
     shoot(1 + modulo(index, 2), 1) = shoot(index, 1) + (bv -...
         shoot(index, 2)) / slope;
   end
@@ -83,8 +82,8 @@ while abs(y1_hm($) - bv) > tol
     // Heun's method
     y1_intermediate = y2_hm(x);
     y2_intermediate = rhs(len(x), a) - alpha * y1_hm(x);
-    y2_hm(x + 1) = y2_hm(x) + dx / 2 * (y2_intermediate + rhs(len(x + 1),...
-        a) - alpha * (y1_hm(x) + dx * y1_intermediate));
+    y2_hm(x + 1) = y2_hm(x) + dx / 2 * (y2_intermediate +...
+        rhs(len(x + 1), a) - alpha * (y1_hm(x) + dx * y1_intermediate));
     y1_hm(x + 1) = y1_hm(x) + dx / 2 * (y1_intermediate + y2_hm(x) + dx *...
         y2_intermediate);
   end  // x
@@ -93,8 +92,8 @@ while abs(y1_hm($) - bv) > tol
   if (~first_time_hm)
     slope = (shoot_hm(1, 2) - shoot_hm(2, 2)) / (shoot_hm(1, 1) -...
         shoot_hm(2, 1));
-    shoot_hm(1 + modulo(index_hm, 2), 1) = shoot_hm(index_hm,...
-        1) + (bv - shoot_hm(index_hm, 2)) / slope;
+    shoot_hm(1 + modulo(index_hm, 2), 1) = shoot_hm(index_hm, 1) + (bv -...
+        shoot_hm(index_hm, 2)) / slope;
   end
   first_time_hm = %F;
   // alternating between beta1 and beta2
@@ -107,10 +106,22 @@ len_e = [len(2):dx:len($-1)];
 // tri-diagonal matrix
 A = zeros(length(len_e), length(len_e));
 B = zeros(length(len_e));
+// using diagonals instead of a full matrix
+upper_diag = ones(length(len_e) - 1, 1);
+main_diag = zeros(length(len_e));
+lower_diag = ones(length(len_e) - 1, 1);
+solution = zeros(length(len_e));  // internal nodes only
 // boundary values
 bv1 = 0;
 bv2 = 0;
 y_e = zeros(len_e);
+
+for y = 1:length(len_e)
+  main_diag(y) = -2 + dx * dx * alpha;
+end
+
+//add up the matrix with the 3 diagonals
+A_matrix = diag(main_diag, 0) + diag(upper_diag, 1) + diag(lower_diag, -1);
 
 for y = 1:length(len_e)
   // no need if else statements for B since boundary values are zero
@@ -129,7 +140,9 @@ for y = 1:length(len_e)
 end
 
 y_e = A \ B;
+solution = A_matrix \ B;
 
 plot(len, y1_s);
 plot(len, y1_hm, 'g-');
 plot(len_e', y_e, 'r-');
+plot(len_e', solution, 'm-')
