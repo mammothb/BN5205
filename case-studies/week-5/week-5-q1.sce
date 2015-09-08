@@ -145,4 +145,4 @@ solution = A_matrix \ B;
 plot(len, y1_s);
 plot(len, y1_hm, 'g-');
 plot(len_e', y_e, 'r-');
-plot(len_e', solution, 'm-')
+plot(len_e', solution, 'm-');
