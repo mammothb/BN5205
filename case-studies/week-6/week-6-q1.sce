@@ -27,7 +27,7 @@ else
   C = zeros(length(len), length(time));
 
   // initial conditions
-  C(:, 1) = C_max;
+  C(1, :) = C_max;
 
   for t = 1:length(time) - 1
     for x = 2:length(len) - 1

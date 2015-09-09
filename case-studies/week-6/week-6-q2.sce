@@ -30,7 +30,7 @@ else
   len = [0:dx:x_max];
   C = zeros(length(len), length(time));
   // initial conditions
-  C(:, 1) = C_max;
+  C(1, :) = C_max;
   for t = 1:length(time) - 1
     for x = 2:length(len) - 1
       C(x, t + 1) = a(1) * C(x - 1, t) + a(2) * C(x, t) + a(3) * C(x + 1, t);
@@ -40,7 +40,7 @@ else
   // allocate memory for lines method solution
   C_l = zeros(length(len), length(time));
   // initial conditions
-  C_l(:, 1) = C_max;
+  C_l(1, :) = C_max;
   for t = 1:length(time) - 1
     for x = 2:length(len) - 1
       C_l(x, t + 1) = C_l(x, t) + dt * dC_idt(C_l(x - 1, t), C_l(x, t),...
