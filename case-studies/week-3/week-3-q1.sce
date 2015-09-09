@@ -101,7 +101,7 @@ plot(time3, mm_3, 'k:');
 plot(time1, rk_1, 'm-.');
 plot(time2, rk_2, 'g-.');
 plot(time3, rk_3, 'k-.');
-xlabel("$Time\ t$", "fontsize", 3)
+xlabel("$Time\ t$", "fontsize", 3);
 ylabel("$Strain\ \epsilon$", "fontsize", 3);
 title("Viscoelastic model of IVD (Analytical vs Forward Euler vs"...
     + " RK2)");
