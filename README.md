@@ -26,3 +26,8 @@ Contains Scilab codes for BN5205 Computational Biomechanics
     * Shooting method
     * Equilibrium method
   2. Verifying numerical result against analytical result
+* Week 6: Leukocyte Migration (Parabolic PDE)
+  1. Solving 1D diffusion-convection model
+    * Forward-Time Central-Space Method
+    * Method of line with Forward Euler
+    * Crank Nicolson method
