@@ -5,15 +5,15 @@ clf;
 E_Leak = -60;  // mV, leak reversal potential
 E_Na = 55;  // mV, sodium reversal potential
 E_K = -92;  // mV, potassium reversal potential
-g_Leak = 2;  // mS/cm^2, leak conductance per unit area
-g_bar_NaT = 12;  // mS/cm^2, max transient sodium conductance per unit area
-g_bar_NaP = 1.1;  // mS/cm^2, max persistent sodium conductance per unit area
-g_bar_K = 6;  // mS/cm^2, maximum potassium conductance per unit area
-C = 1;  // C/mm^2, membrance capacitance per unit area
-tau_K = 4;  // s, time constant for potassium channel
-tau_NaT = 3;  // s, time constant for transient sodium channel
+g_Leak = 2;  // uS/cm^2, leak conductance per unit area
+g_bar_NaT = 12;  // uS/cm^2, max transient sodium conductance per unit area
+g_bar_NaP = 1.1;  // uS/cm^2, max persistent sodium conductance per unit area
+g_bar_K = 6;  // uS/cm^2, maximum potassium conductance per unit area
+C = 1;  // nC/cm^2, membrance capacitance per unit area
+tau_K = 4;  // ms, time constant for potassium channel
+tau_NaT = 3;  // ms, time constant for transient sodium channel
 
-// s, time constant for presistent sodium channel
+// ms, time constant for presistent sodium channel
 // \param voltage membrane voltage
 // \return time_constant time constant for persistent sodium channel at said
 //         membrane potential
