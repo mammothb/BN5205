@@ -138,8 +138,10 @@ for t = 1:length(time) - 1
       slopes(soln_hm(:, t) + dt * intermediate, I_stim(t), xi(t)));
 end
 
+// plotting forward euler soluntion and heun's method solution on same plot
 plot(time, soln_fe(1, :), 'b-');
 plot(time, soln_hm(1, :), 'r-');
+// set up plot title, axis labels and legends
 title("$Membrane\ potential\ V\ vs\ time\ t$", "fontsize", 4);
 ylabel("$Membrane\ potential\ V\ (mV)$", "fontsize", 4);
 xlabel("$Time\ t\ (ms)$", "fontsize", 4);
