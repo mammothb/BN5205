@@ -67,7 +67,7 @@ endfunction
 // \param xi random variable at specified time point for the Ornstein-Uhlenbeck
 //        process, the variable has normal distribution, zero mean and unitary
 //        variance generated at the beginning of the simulation
-// \return a vector containing [dV/dt; dn/dt; dh_t/dt; dh_p/dt; dnoise/dt]
+// \return output vector containing [dV/dt; dn/dt; dh_t/dt; dh_p/dt; dnoise/dt]
 //==============================================================================
 function output = slopes(vals, I, rand_var)
   // reassigning variables for clarity
@@ -115,7 +115,8 @@ soln_fe = zeros(5, length(time));  // solution using forward euler
 soln_hm = zeros(5, length(time));  // solution using heun's method
 
 // Initial conditions
-soln(1, 1) = -60;  // mV, initial membrane potential
+soln_fe(1, 1) = -60;  // mV, initial membrane potential
+soln_hm(1, 1) = -60;  // mV, initial membrane potential
 
 rand('normal');
 for t = 1:length(time)
@@ -135,7 +136,7 @@ for t = 1:length(time) - 1
   // heun's method
   intermediate = slopes(soln_hm(:, t), I_stim(t), xi(t));
   soln_hm(:, t + 1) = soln_hm(:, t) + dt / 2 * (intermediate +...
-      slopes(soln_hm(:, t) + dt * intermediate, I_stim(t), xi(t)));
+      slopes(soln_hm(:, t) + dt * intermediate, I_stim(t + 1), xi(t + 1)));
 end
 
 // plotting forward euler soluntion and heun's method solution on same plot
