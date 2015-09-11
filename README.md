@@ -12,7 +12,8 @@ Contains Scilab codes for BN5205 Computational Biomechanics
     * Heun's Method
     * Midpoint Method
     * 4<sup>th</sup> order Runge-Kutta method
-  2. Comparison between numerical methods and experimental data of the hysteresis loop
+  2. Comparison between numerical methods and experimental data of the
+     hysteresis loop
 * Week 4: Smooth Muscle Contraction (Multiple ODEs, Explicit & Implicit)
   1. Solving Hai & Murphy model using various numerical methods
     * Forward Euler
@@ -31,3 +32,8 @@ Contains Scilab codes for BN5205 Computational Biomechanics
     * Forward-Time Central-Space Method
     * Method of line with Forward Euler
     * Crank Nicolson method
+
+## Assignments
+1. Simulate membrane potential using model of a mesencephalic V neuron developed
+   by Wu <i>et al</i>
+   * Solve multiple ODEs using Forward Euler and Heun's Method
