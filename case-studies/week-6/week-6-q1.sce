@@ -22,15 +22,17 @@ else
   // coefficients for discretized form of diffusion-convection equation after
   // rearranging
   a = [delta + f, 1 - 2 * delta, delta - f];
-  time = [0:dt:35];
-  len = [0:dx:x_max];
-  C = zeros(length(len), length(time));
+  time = 0:dt:35;
+  len = 0:dx:x_max;
+  num_nodes = length(len);
+  num_t_steps = length(time);
+  C = zeros(num_nodes, num_t_steps);
 
   // initial conditions
   C(1, :) = C_max;
 
-  for t = 1:length(time) - 1
-    for x = 2:length(len) - 1
+  for t = 1:num_t_steps - 1
+    for x = 2:num_nodes - 1
       C(x, t + 1) = a(1) * C(x - 1, t) + a(2) * C(x, t) + a(3) * C(x + 1, t);
     end  // x
   end  // t

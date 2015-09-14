@@ -104,22 +104,23 @@ tau_NaT = 3;  // ms, time constant for transient sodium channel
 // simulation parameters
 dt = 0.1;  // ms, time step
 stimulus = 50;  // nA, stimulus
-time = [0:dt:400];  // vector containing all time points
-I_stim = zeros(length(time), 1);  // stimulus at each time point
+time = 0:dt:400;  // vector containing all time points
+num_t_steps = length(time);  // number of time steps
+I_stim = zeros(num_t_steps, 1);  // stimulus at each time point
 // random variable for Ornstein-Uhlenbeck process, both solutions share the same
 // set of random variables so that results are comparable
-xi = zeros(length(time), 1);
+xi = zeros(num_t_steps, 1);
 // solution matrix containing only components that requires solving numerically
 // [V, n, h_t, h_p, noise]
-soln_fe = zeros(5, length(time));  // solution using forward euler
-soln_hm = zeros(5, length(time));  // solution using heun's method
+soln_fe = zeros(5, num_t_steps);  // solution using forward euler
+soln_hm = zeros(5, num_t_steps);  // solution using heun's method
 
 // Initial conditions
 soln_fe(1, 1) = -60;  // mV, initial membrane potential
 soln_hm(1, 1) = -60;  // mV, initial membrane potential
 
 rand('normal');
-for t = 1:length(time)
+for t = 1:num_t_steps
   // setting up random variable
   xi(t) = rand();
   // setting up stimulus current from 50ms to 250ms
@@ -129,7 +130,7 @@ for t = 1:length(time)
 end
 
 // solving using Forward Euler and Heun's Method (RK2)
-for t = 1:length(time) - 1
+for t = 1:num_t_steps - 1
   // forward euler
   soln_fe(:, t + 1) = soln_fe(:, t) + dt * slopes(soln_fe(:, t), I_stim(t),...
       xi(t));

@@ -19,20 +19,22 @@ if delta > 0.5 then
 else
   // RHS to simplify equation, 2 * tau * f
   f = v_eff * dt / dx;
-  time = [0:dt:35];
-  len = [0:dx:x_max];
+  time = 0:dt:35;
+  len = 0:dx:x_max;
+  num_nodes = length(len);
+  num_t_steps = length(time);
   // forming the diagonals of the two tri-diagonal matrices, A and B
-  A_main_diag = zeros(length(len) - 2, 1);
-  A_upper_diag = zeros(length(len) - 3, 1);
-  A_lower_diag = zeros(length(len) - 3, 1);
-  B_main_diag = zeros(length(len) - 2, 1);
-  B_upper_diag = zeros(length(len) - 3, 1);
-  B_lower_diag = zeros(length(len) - 3, 1);
-  C = zeros(length(len) - 2, 1);  // C updates every time interval
-  solution = zeros(length(len), length(time));
+  A_main_diag = zeros(num_nodes - 2, 1);
+  A_upper_diag = zeros(num_nodes - 3, 1);
+  A_lower_diag = zeros(num_nodes - 3, 1);
+  B_main_diag = zeros(num_nodes - 2, 1);
+  B_upper_diag = zeros(num_nodes - 3, 1);
+  B_lower_diag = zeros(num_nodes - 3, 1);
+  C = zeros(num_nodes - 2, 1);  // C updates every time interval
+  solution = zeros(num_nodes, num_t_steps);
   solution(1, :) = C_max;
 
-  for i = 1:length(len) - 2
+  for i = 1:num_nodes - 2
     A_main_diag(i) = 2 * (1 + delta);
     B_main_diag(i) = 2 * (1 - delta);
     if i < length(len) - 2 then
@@ -43,9 +45,9 @@ else
   // create A and B tri-diagonal matrices
   A = diag(A_main_diag, 0) + diag(A_shorter_diag, 1) + diag(A_shorter_diag, -1);
   B = diag(B_main_diag, 0) + diag(B_shorter_diag, 1) + diag(B_shorter_diag, -1);
-  for t = 1:length(time) - 1
+  for t = 1:num_t_steps - 1
     // update RHS at every time step
-    for x = 2:length(len) - 2
+    for x = 2:num_nodes - 2
       C(x - 1) = f * (solution(x + 1, t) - solution(x - 1, t));
     end
     //boundary conditions
