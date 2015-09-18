@@ -102,7 +102,7 @@ tau_K = 4;  // ms, time constant for potassium channel
 tau_NaT = 3;  // ms, time constant for transient sodium channel
 
 // simulation parameters
-dt = 0.1;  // ms, time step
+dt = 0.01;  // ms, time step
 stimulus = 50;  // nA, stimulus
 time = 0:dt:400;  // vector containing all time points
 num_t_steps = length(time);  // number of time steps
