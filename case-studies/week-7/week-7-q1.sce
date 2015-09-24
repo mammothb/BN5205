@@ -89,3 +89,6 @@ for j = 1:ny
 end
 //plot2d(solution);
 contour(xplot, yplot, solution, 20);
+xlabel("x position");
+ylabel("y position");
+title("Temperature in tissue");

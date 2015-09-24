@@ -32,6 +32,10 @@ Contains Scilab codes for BN5205 Computational Biomechanics
     * Forward-Time Central-Space Method
     * Method of line with Forward Euler
     * Crank Nicolson method
+* Week 7: Cryoablation (Elliptic PDE)
+ 1. Solving 2D steady state heat equation using finite difference
+    * Dirichlet BC
+    * Neumann BC
 
 ## Assignments
 1. Simulate membrane potential using model of a mesencephalic V neuron developed

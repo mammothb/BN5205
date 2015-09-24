@@ -104,3 +104,6 @@ for j = 1:ny
 end
 
 contour(xplot, yplot, solution, 20);
+xlabel("x position");
+ylabel("y position");
+title("Temperature in tissue");
