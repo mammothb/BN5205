@@ -39,8 +39,9 @@ Q = 4e14;  // J/(s*m^3), Heat energy generated
 k = 0.9e7;  // m^2/s, Thermal diffusivity
 rho = 1e-3;  // kg/m^3, Tissue density
 c = 3.7e3;  // J/(kg*K), Specific thermal capacity
-L = 3.0 / 100;  // m, Length of tissue sample (AB)
-H = 4.0 / 100;  // m, Height of tissue sample (AD)
+// L and H swapped so line not in center
+L = 4.0 / 100;  // m, Length of tissue sample (AB)
+H = 3.0 / 100;  // m, Height of tissue sample (AD)
 z = 1.5 / 100;  // m, distance of cryoablation line (z)
 d = 0.5 / 100;  // m, distance of cyroablation line (d)
 T_AB = 37.0 + 273.15;  // K, temperature of along AB
@@ -55,8 +56,8 @@ x = h:h:L;
 y = h:h:H;
 xplot = 0:h:L;  // x axis for plotting
 yplot = 0:h:H;  // x axis for plotting
-num_nodes_x = L / h + 1;  // number of nodes in x direction
-num_nodes_y = H / h + 1;  // number of nodes in y direction
+num_nodes_x = length(xplot);  // number of nodes in x direction
+num_nodes_y = length(yplot);  // number of nodes in y direction
 nx = num_nodes_x - 2;  // number of internal nodes in x direction
 ny = num_nodes_y - 2;  // number of internal nodes in y direction
 mat_size = nx * ny;  // var for matrix size
@@ -103,7 +104,10 @@ for j = 1:ny
   end
 end
 
-contour(xplot, yplot, solution, 20);
-xlabel("x position");
-ylabel("y position");
-title("Temperature in tissue");
+// contourf(xplot, yplot, solution, 32);
+// f = gcf();
+// f.color_map = jetcolormap(32);
+// xlabel("x position");
+// ylabel("y position");
+// title("Temperature in tissue");
+plot3d(xplot, yplot, solution)
