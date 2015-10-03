@@ -1,5 +1,4 @@
 clear;
-// clf;
 
 //==============================================================================
 // Evaluetes 1D linear Lagrange basis functions. Throws error message if local
