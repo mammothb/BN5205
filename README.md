@@ -36,6 +36,9 @@ Contains Scilab codes for BN5205 Computational Biomechanics
  1. Solving 2D steady state heat equation using finite difference
     * Dirichlet BC
     * Neumann BC
+* Week 8: Finite element linear basis functions
+ 1. 1D linear basis function and 1D linear Lagrange interpolation
+ 2. 2D bilinear basis functions and 2D linear Lagrange interpolation
 
 ## Assignments
 1. Simulate membrane potential using model of a mesencephalic V neuron developed
