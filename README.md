@@ -39,6 +39,8 @@ Contains Scilab codes for BN5205 Computational Biomechanics
 * Week 8: Finite element linear basis functions
  1. 1D linear basis function and 1D linear Lagrange interpolation
  2. 2D bilinear basis functions and 2D linear Lagrange interpolation
+* Week 9: 1D  steady-state heat conduction
+ 1. Solving 1D steady-state heat equation using finite elements
 
 ## Assignments
 1. Simulate membrane potential using model of a mesencephalic V neuron developed
