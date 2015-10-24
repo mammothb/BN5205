@@ -1,0 +1,74 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage[margin=1in]{geometry}
+\usepackage[parfill]{parskip}
+
+\newcommand{\Psim}{\ensuremath{\Psi_m(\xi)}}
+\newcommand{\Psin}{\ensuremath{\Psi_n(\xi)}}
+
+\begin{document}
+  \paragraph{name,matric} BN5205 Finite Element Assignment
+
+  Governing equation:
+  \begin{equation}
+  \frac{\partial u}{\partial t} = \nabla \cdot (D \nabla u) + u
+  \end{equation}
+  Boundary condition:
+  \begin{equation}
+  D \frac{\partial u}{\partial n} |_{\Gamma} = g
+  \end{equation}
+  where $g = 0$.
+  
+  Galerkin weighted residual method:
+  \begin{equation*}
+  \int_{\Omega} \left(\frac{\partial u}{\partial t} - \nabla \cdot (D \nabla u) 
+  - u \right) \omega \: d\Omega = 0
+  \end{equation*}
+  Since $D = 0.1$ is a scalar value:
+  \begin{equation} \label{eq:mwr}
+  \int_{\Omega} \left(\frac{\partial u}{\partial t} - D \nabla^2 u - u 
+  \right) \omega \: d\Omega = 0
+  \end{equation}
+  Green-Gauss theorem:
+  \begin{equation} \label{eq:green-gauss}
+  \int_{\Omega} (f \nabla \cdot (h\nabla g) + \nabla f \cdot (h \nabla g)) \: 
+  d\Omega = \int_{\Gamma} f h \frac{\partial g}{\partial n} \: d\Gamma
+  \end{equation}
+  Substitute $f = \omega$, $g = u$, and $h = D$ into Eq. \eqref{eq:green-gauss}
+  \begin{equation} \label{eq:green-gauss-subbed}
+  \int_{\Omega} D\nabla^2 u \cdot \omega \: d\Omega = -\int_{\Omega} D\nabla 
+  u \cdot \nabla \omega \: d\Omega + \int_{\Gamma} D \frac{\partial 
+  u}{\partial n} \omega \: d\Gamma
+  \end{equation}
+  Splitting the integral and using Eq. \eqref{eq:green-gauss-subbed} in Eq. 
+  \eqref{eq:mwr} to obtain weak formulation:
+  \begin{equation} \label{eq:weak}
+  \int_{\Omega} \frac{\partial u}{\partial t} \: \omega \: d\Omega + 
+  \int_{\Omega} D\nabla u \cdot \nabla \omega \: d\Omega - \int_{\Omega} u \: 
+  \omega \: d\Omega = \int_{\Gamma} D \frac{\partial u}{\partial n} \omega \: 
+  d\Gamma
+  \end{equation}
+  Let $u = \Psin u_n$ and $\omega = \Psim$. Represent Eq. 
+  \eqref{eq:weak} as a system of first order ODEs:
+  \begin{equation}
+  \mathbf{M} \frac{\partial u}{\partial t} + \mathbf{K}u = \mathbf{f}
+  \end{equation}
+  where $\mathbf{M}$ is the global mass matrix, its element contributions are 
+  given by
+  \begin{equation}
+  M_{mn}^e = \int_{0}^{1}\Psin \Psim J \: d\xi
+  \end{equation}
+  $\mathbf{K}$ is the global stiffness matrix, its element contributions are 
+  given by
+  \begin{equation}
+  K_{mn}^e = \int_{0}^{1} \left(D \frac{\partial \Psin}{\partial \xi_i} 
+  \frac{\partial \xi_i}{\partial x_k} \frac{\partial \Psim}{\partial \xi_j} 
+  \frac{\partial \xi_j}{\partial x_k} -\Psin \Psim \right)\: J \: d\bm{\xi}
+  \end{equation}
+  and $\mathbf{f}$ is the RHS vector, its element contributions are given by
+  \begin{equation}
+  f_m = \int_{\Gamma} g \Psim \: d\Gamma
+  \end{equation}
+\end{document}
