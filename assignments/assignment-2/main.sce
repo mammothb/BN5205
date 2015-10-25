@@ -46,8 +46,7 @@ exec(path+'\assignments\assignment-2\dxiIdxJ.sci');
 //=============================================================================
 
 // Change resolution using this variable
-// TODO: change back to assignment values
-elemsPerSide = 16;  // not _that_ important
+elemsPerSide = 64;
 
 sideLength = 8;
 nodesPerSide = elemsPerSide+1;
@@ -59,8 +58,12 @@ nodePos(1:numNodes,2) = 0;
 elemNode(1:numElems,4) = 0;
 BCs(1:numNodes,2) = 0;
 
-sim_time = 5.0;  // [s], total simulation time
-dt = 0.01;  // [s], time step, need to keep small
+//==============================================================================
+// Set up model / simulation parameters
+//==============================================================================
+D = 0.1;  // Diffusivity of domain
+sim_time = 10.0;  // [s], total simulation time
+dt = 0.1;  // [s], time step, need to keep small
 num_time_steps = round(sim_time / dt);  // total number of time steps
 // Warns if sim_time is not completely divisible by dt, either due to incorrect
 // choice of dt or due to precision error. Example when sim_time = 0.3 and
@@ -82,9 +85,6 @@ for j = 1:nodesPerSide
     n = n + 1;
   end //i
 end //j
-
-// Trying out essential BC
-// BCs(3, 1) = 1;
 
 //=============================================================================
 // Generate elements
@@ -124,8 +124,6 @@ K = zeros(numNodes,numNodes);
 M = zeros(numNodes,numNodes);
 f = zeros(numNodes,1);
 u = zeros(numNodes,1);
-// TODO: Remember to change to value in assignment
-D = 0.1;  // Diffusivity of domain
 
 // Loop over elements
 for elem = 1:numElems
@@ -140,6 +138,7 @@ for elem = 1:numElems
 
   //*** Q. Write code to calculate the element stiffness & mass
   //***    matrices for an arbitrary element in 2D space here.
+
   // Loop over local nodes of each element
   for n = 1 : nodesPerElement
     // Get values for Gauss points
@@ -154,12 +153,10 @@ for elem = 1:numElems
     psi_big_mat = psi_mat' * psi_mat;
     // Compute element stiffness matrix and element mass matrix with Gaussian
     // quadrature
-    EK = EK + gaussWei(n) * J * (D .* dxidx' * dxidx - psi_big_mat);
+    EK = EK + gaussWei(n) * J .* (D .* dxidx' * dxidx - psi_big_mat);
     EM = EM + gaussWei(n) * J .* psi_big_mat;
   end  // nn
   // TODO: consider mass lumping element mass matrix
-  // disp(EK);
-  // disp(EM);
 
   //===========================================================================
   // Assemble EK & EM into the global stiffness & mass matrices
@@ -167,6 +164,7 @@ for elem = 1:numElems
 
   //*** Q. Write code to calculate assemble the element stiffness
   //***    matrix you have just created into the global stiffness matrix here.
+
   // Loop over local nodes of each element matrix
   for i = 1 : nodesPerElement
     m = elemNode(elem, i);  // Get the global node number
@@ -190,12 +188,14 @@ end //elem
 //*** Q. Write code to apply the boundary and initial conditions to the problem
 //***    here.
 //***    NOTE: the overwriting method should be used for essential BCs.
+
 // Vector containing global node number of external/edge nodes in the following
 // format: ext_nodes = [left edge, right edge, bottom edge, top edge]
 ext_nodes = [1 : nodesPerSide : numNodes,...
              nodesPerSide : nodesPerSide : numNodes,...
              2 : nodesPerSide - 1,...
              (nodesPerSide - 1) * nodesPerSide + 2 : numNodes - 1];
+// Loop over all nodes
 for n = 1 : numNodes
   // Essential boundary
   if BCs(n, 1) == 1 then
@@ -211,17 +211,28 @@ for n = 1 : numNodes
     f(n) = BCs(n, 2);
   end
 end  // n
-
-u(elemsPerSide / 2 * nodesPerSide + elemsPerSide / 2 + 1) = 1;
+// Initial condition of u(4, 4, t = 0) = 1. Only works for odd nodesPerSide
+// there will not be a single center node when nodesPerSide is even.
+u(elemsPerSide / 2 * nodesPerSide + elemsPerSide / 2 + 1) = 1.0;
 
 //=============================================================================
 // Solve
 //=============================================================================
 
 //*** Q. Write code to solve the resulting matrix system over time here.
+
+// Solves using Crank-Nicolson-Galerkin method. Equation has the following form:
+// [M + \theta * \Delta t * K] * u^{n + 1} =
+//     [M - (1 - \theta) * \Delta t * K] * u^n + \Delta t * K * f
+// where \theta = 0.5
+// 2nd order accurate in time domain and unconditionably stable since it's
+// implicit in time.
+// Able to obtain stable solution when dt = 0.5 whereas Forward-Euler shows
+// instability
 for t = 1 : num_time_steps
-  u = M \ (M - dt .* K) * u + M \ dt .* K * f;
-end
+  // Only one solution vector since we are only interested in the end result.
+  u = (M + 0.5 * dt .* K) \ ((M - 0.5 * dt .* K) * u + dt .* K * f);
+end  // t
 
 //=============================================================================
 // Surface plot of the solution
