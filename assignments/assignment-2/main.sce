@@ -63,7 +63,7 @@ BCs(1:numNodes,2) = 0;
 //==============================================================================
 D = 0.1;  // Diffusivity of domain
 sim_time = 10.0;  // [s], total simulation time
-dt = 0.1;  // [s], time step, need to keep small
+dt = 0.05;  // [s], time step
 num_time_steps = round(sim_time / dt);  // total number of time steps
 // Warns if sim_time is not completely divisible by dt, either due to incorrect
 // choice of dt or due to precision error. Example when sim_time = 0.3 and
@@ -156,7 +156,6 @@ for elem = 1:numElems
     EK = EK + gaussWei(n) * J .* (D .* dxidx' * dxidx - psi_big_mat);
     EM = EM + gaussWei(n) * J .* psi_big_mat;
   end  // nn
-  // TODO: consider mass lumping element mass matrix
 
   //===========================================================================
   // Assemble EK & EM into the global stiffness & mass matrices
@@ -177,8 +176,6 @@ for elem = 1:numElems
       M(m, n) = M(m, n) + EM(i, j);
     end  // j
   end  // i
-
-
 end //elem
 
 //=============================================================================

@@ -3,14 +3,16 @@
 \usepackage{amsmath}
 \usepackage{bm}
 \usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
 \usepackage[parfill]{parskip}
+\usepackage{pgfplots}
 
 \newcommand{\Psim}{\ensuremath{\Psi_m(\xi)}}
 \newcommand{\Psin}{\ensuremath{\Psi_n(\xi)}}
 
 \begin{document}
   \paragraph{name,matric} BN5205 Finite Element Assignment
-
+  \section{Getting the weak formulation}
   Governing equation:
   \begin{equation}
   \frac{\partial u}{\partial t} = \nabla \cdot (D \nabla u) + u
@@ -71,4 +73,39 @@
   \begin{equation}
   f_m = \int_{\Gamma} g \Psim \: d\Gamma
   \end{equation}
+  where $g=0$.
+  \section{Choice of time and space step}
+  The initial bacterial concentration creates a sharp spike in the middle of 
+  the domain. Therefore, fine mesh is needed to accurately model approximate 
+  the sharp change in density surrounding the spike. A simple mesh convergence 
+  analysis was conducted (Fig. \ref{fig:space_step}). The finest mesh tested 
+  was $80 \times 80$ due to memory limitation.
+  \begin{figure}[h]
+    \centering
+    \begin{tikzpicture} %pgfplot
+    \begin{axis}[
+      scale=1.0,
+      xmin=0,
+      ymin=0,
+      xlabel={Number of element per side},
+      ylabel={Bacterial concentration $u(4,4)$}
+    ]
+    \addplot[blue, mark=square] table [x=elem, y=u_mid1]{mesh_conv.dat};
+    \end{axis}
+    \end{tikzpicture}
+    \caption{Mesh convergence analysis \label{fig:space_step}}
+  \end{figure}
+  
+  As the difference between the results obtained $80 \times 80$ and $64 \times 
+  64$ mesh is around $50\%$, a smaller space step is necessary to accurately 
+  model bacteria growth.
+  
+  As the Crank-Nicolson-Galerkin scheme was used, the time step size has no 
+  effect on the stability of the simulation. However, the time step size was 
+  set to be $\Delta t = 0.05$ in a $64 \times 64$ mesh so that the Courant 
+  condition 
+  \begin{equation}
+  D \frac{\Delta t}{\Delta x^2} \leq \frac{1}{2}
+  \end{equation}
+  could be satisfied to ensure numerical accuracy.
 \end{document}
