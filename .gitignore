@@ -126,3 +126,6 @@ sympy-plots-for-*.tex/
 *.bak
 *.sav
 assignments/assignment-2/sample/
+case-studies/week-12/Amatrix
+case-studies/week-12/Bvector
+*.xlsx
