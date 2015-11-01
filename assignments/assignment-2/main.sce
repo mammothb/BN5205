@@ -67,10 +67,9 @@ dt = 0.05;  // [s], time step
 num_time_steps = round(sim_time / dt);  // total number of time steps
 // Warns if sim_time is not completely divisible by dt, either due to incorrect
 // choice of dt or due to precision error. Example when sim_time = 0.3 and
-// dt = 0.1
-if modulo(sim_time, dt) > 1e-20 then
-  warning('Inappropriate time step size');
-end
+// dt = 0.1. Uses warning instead of error since simulation can still run and
+// will end 1 time step earlier, which may not be significant in some cases
+if modulo(sim_time, dt) > 1e-20 then, warning('Wrong time step size'); end
 
 //=============================================================================
 // Generate nodes & boundary conditions

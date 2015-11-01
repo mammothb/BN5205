@@ -15,22 +15,23 @@ function [jacobian, dxidx] = dxiIdxJ ( elem, nodesPerElement, xi1, xi2, nodePos,
   //***    and the transformation Jacobian for an
   //***    arbitrary element in 2D space here.
 
-  // Create a 4-by-2 matrix containing global node coordinates of element
-  elem_pos = zeros(nodesPerElement, 2);
-  // Matrix of grad(dPsi_n / dxi_i)
-  grad_mat = zeros(2, nodesPerElement);
+  // Create a 2-by-4 matrix containing global node coordinates of element
+  elem_pos = zeros(2, nodesPerElement);
+  // Matrix of grad(Psi_n) w.r.t. xi
+  grad_mat = zeros(nodesPerElement, 2);
   for n = 1 : nodesPerElement
-    elem_pos(n, 1) = nodePos(elemNode(elem, n), 1);
-    elem_pos(n, 2) = nodePos(elemNode(elem, n), 2);
-    grad_mat(1, n) = psi(n, 1, xi1, xi2);
-    grad_mat(2, n) = psi(n, 2, xi1, xi2);
+    elem_pos(1, n) = nodePos(elemNode(elem, n), 1);
+    elem_pos(2, n) = nodePos(elemNode(elem, n), 2);
+    grad_mat(n, 1) = psi(n, 1, xi1, xi2);
+    grad_mat(n, 2) = psi(n, 2, xi1, xi2);
   end  // n
-  // matrix of dxJ/dxiI
-  jacobian_mat = grad_mat * elem_pos;
+  // Matrix of dxJ/dxiI
+  jacobian_mat = elem_pos * grad_mat;
   jacobian = det(jacobian_mat);
-  dxidx = jacobian_mat \ grad_mat;
+  // Calculates dPsi_n/dxi_i * dxi_i/dx_j = inv(jacobian_mat) * grad(Psi_n) and
+  // output that as dxi_i/dxi_j so we don't have to loop through element local
+  // nodes to construct grad(Psi_n) again
+  dxidx = jacobian_mat \ grad_mat';
   // Error checking since jacobian must be positive
-  if jacobian < 0 then
-    error('Jacobian is negative.');
-  end
+  if jacobian < 0 then, error('Jacobian is negative.'); end
 endfunction
