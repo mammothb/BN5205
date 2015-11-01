@@ -168,7 +168,6 @@ for elem = 1:numElems
     m = elemNode(elem, i);  // Get the global node number
     for j = 1 : nodesPerElement
       n = elemNode(elem, j);  // Get the other global node number
-      // printf('%d, %d\n', m, n);\
       // Assemles element matrix into global matrix, sum up values when global
       // matrix nodes coincide.
       K(m, n) = K(m, n) + EK(i, j);
