@@ -145,6 +145,15 @@ for elem = 1:numElems
     xi2 = gaussPos(n, 2);
     // Calculate jacobian and dxi/dx matrix
     [J, dxidx] = dxiIdxJ(elem, nodesPerElement, xi1, xi2, nodePos, elemNode);
+    // Matrix of grad(Psi_n) w.r.t. xi
+    grad_psi = zeros(2, nodesPerElement);
+    // Loop over local nodes of element to create grad(Psi_n) matrix
+    for nn = 1 : nodesPerElement
+      grad_psi(1, nn) = psi(nn, 1, xi1, xi2);
+      grad_psi(2, nn) = psi(nn, 2, xi1, xi2);
+    end  // nn
+    // Formula for B = dPsi/dxi * dxi/dx
+    B = dxidx * grad_psi;
     // Set up Psi terms for Mass matrix
     psi_mat = [psi(1, 0, xi1, xi2), psi(2, 0, xi1, xi2), psi(3, 0, xi1, xi2),...
         psi(4, 0, xi1, xi2)];
@@ -152,9 +161,9 @@ for elem = 1:numElems
     psi_big_mat = psi_mat' * psi_mat;
     // Compute element stiffness matrix and element mass matrix with Gaussian
     // quadrature
-    EK = EK + gaussWei(n) * J .* (D .* dxidx' * dxidx - psi_big_mat);
+    EK = EK + gaussWei(n) * J .* (D .* B' * B - psi_big_mat);
     EM = EM + gaussWei(n) * J .* psi_big_mat;
-  end  // nn
+  end  // n
 
   //===========================================================================
   // Assemble EK & EM into the global stiffness & mass matrices

@@ -28,10 +28,8 @@ function [jacobian, dxidx] = dxiIdxJ ( elem, nodesPerElement, xi1, xi2, nodePos,
   // Matrix of dxJ/dxiI
   jacobian_mat = elem_pos * grad_mat;
   jacobian = det(jacobian_mat);
-  // Calculates dPsi_n/dxi_i * dxi_i/dx_j = inv(jacobian_mat) * grad(Psi_n) and
-  // output that as dxi_i/dxi_j so we don't have to loop through element local
-  // nodes to construct grad(Psi_n) again
-  dxidx = jacobian_mat \ grad_mat';
+  // Calculates dxi/dx which is the inverse of the jacobian matrix
+  dxidx = inv(jacobian_mat);
   // Error checking since jacobian must be positive
   if jacobian < 0 then, error('Jacobian is negative.'); end
 endfunction
