@@ -41,8 +41,11 @@ Contains Scilab codes for BN5205 Computational Biomechanics
  2. 2D bilinear basis functions and 2D linear Lagrange interpolation
 * Week 9: 1D  steady-state heat conduction
  1. Solving 1D steady-state heat equation using finite elements
+* Week 11: Gaussian quadrature
+* Week 12: Sparse Matrix Operations
 
 ## Assignments
 1. Simulate membrane potential using model of a mesencephalic V neuron developed
    by Wu <i>et al</i>
    * Solve multiple ODEs using Forward Euler and Heun's Method
+2. Simulate 2D diffusion-reaction equation
