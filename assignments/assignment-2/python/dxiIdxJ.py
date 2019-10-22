@@ -2,19 +2,16 @@ import numpy as np
 
 from psi import psi
 
-def dxiIdxJ(elem, nodes_per_element, xi_1, xi_2, node_pos, elem_node):
+def dxiIdxJ(elem, node_per_elem, xi_1, xi_2, node_pos, elem_node):
     # 2-by-4 matrix containing global node coordinates of element
-    elem_pos = np.zeros((2, nodes_per_element))
+    nodes = [elem_node[elem, num] for num in range(node_per_elem)]
+    elem_pos = np.array([[node_pos[node, x] for node in nodes]
+                         for x in range(2)])
     # Matrix of grad(Psi_n) w.r.t. xi
-    grad_mat = np.zeros((nodes_per_element, 2))
-    for n in range(nodes_per_element):
-        elem_pos[0, n] = node_pos[elem_node[elem, n], 0]
-        elem_pos[1, n] = node_pos[elem_node[elem, n], 1]
-        grad_mat[n, 0] = psi(n, 1, xi_1, xi_2)
-        grad_mat[n, 1] = psi(n, 2, xi_1, xi_2)
-
+    grad_mat = np.array([[psi(num, der, xi_1, xi_2) for der in [1, 2]]
+                         for num in range(node_per_elem)])
     # Matrix of dxJ/dxiI
-    jacobian_mat = np.matmul(elem_pos, grad_mat)
+    jacobian_mat = elem_pos @ grad_mat
     jacobian = np.linalg.det(jacobian_mat)
     # Calculates dxi/dx which is the inverse of the jacobian matrix
     dxidx = np.linalg.inv(jacobian_mat)
